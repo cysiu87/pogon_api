@@ -10,7 +10,7 @@ var config_prod = {
   max: process.env.MAX,
   idleTimeoutMillis: process.env.TIMEOUT,
   ssl: true,
-  sslmode: "no-verify"
+  sslmode: "require"
 };
 
 var config = {
@@ -22,11 +22,11 @@ var config = {
   max: process.env.MAX,
   idleTimeoutMillis: process.env.TIMEOUT,
   ssl: true,
-  sslmode: "no-verify"
+  sslmode: "require"
 };
 
 const getConnection = () => {
-  return new Client(config);
+  return new Client(config_prod);
   
   // ({
   //   connectionString: process.env.DATABASE_URL_PROD,  // Use connectionString with the URL
