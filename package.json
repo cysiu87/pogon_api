@@ -2,8 +2,10 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jade": "^1.11.0",
     "node-dbi": "^0.7.1",
     "pg": "^8.13.1",
+    "pug": "^3.0.3",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2"
   },

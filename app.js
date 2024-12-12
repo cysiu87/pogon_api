@@ -4,7 +4,7 @@ const app = express ();
 const getConnection = require('./db-config');
 
 app.use(express.json());
-
+app.set('view engine', 'pug');
 const API_PORT = process.env.API_PORT || 3000;
 
 app.listen(API_PORT, () => {
@@ -13,26 +13,32 @@ app.listen(API_PORT, () => {
 
 //DB test!
 app.get('/test-db', (req, res) => {
-    const db = getConnection();
-    db.connect((err) => {
+    const client = getConnection();
+    var login= req.query.login;
+    console.log(login)
+    var pgsql = "SELECT * from users where login = '" +login +"';";
+   
+    client.connect((err) => {
       if (err) {
-        console.error('Error connecting to the database:', err.stack);
-        res.render('database', { status: 'Error connecting to the database: ' + err.stack });
+        console.error("Error connecting to the database:", err.stack);
+        res.send({ "status": "Error connecting to the database: " + err.stack });
         return;
       }
-      db.query('SELECT 1 + 1 AS solution', (err, results) => {
-        db.end(); // Close the connection after query
+      client.query(pgsql, (err, results) => {
+        client.end(); // Close the connection after query
         if (err) {
           console.error('Error querying the database:', err.stack);
-          res.render('database', { status: 'Error querying the database: ' + err.stack });
+          res.send({ "status": "Error querying the database: " + err.stack });
           return;
         }
   
         // Use 'results.rows' to access the rows returned by PostgreSQL
         if (results.rows && results.rows.length > 0) {
-          res.render('database', { status: 'Database connection test successful! Result: ' + results.rows[0].solution });
+          console.table(results.rows)          
+          res.send(results.rows);
+          
         } else {
-          res.render('database', { status: 'No rows returned from the query.' });
+          res.send({ "status": "No rows returned from the query." });
         }
       });
     });
