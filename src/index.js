@@ -15,7 +15,7 @@ app.listen(API_PORT, () => {
 app.get('/test-db', (req, res) => {
     const client = getConnection();
     var login= req.query.login;
-    console.log(login)
+    //console.log(login)
     var pgsql = "SELECT * from users where login = '" +login +"';";
    
     client.connect((err) => {
@@ -34,7 +34,7 @@ app.get('/test-db', (req, res) => {
   
         // Use 'results.rows' to access the rows returned by PostgreSQL
         if (results.rows && results.rows.length > 0) {
-          console.table(results.rows)          
+          //console.table(results.rows)          
           res.send(results.rows);
           
         } else {

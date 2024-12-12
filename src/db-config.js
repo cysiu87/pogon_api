@@ -8,7 +8,9 @@ var config_prod = {
   host: process.env.HOST_PROD, 
   port: process.env.PORT, 
   max: process.env.MAX,
-  idleTimeoutMillis: process.env.TIMEOUT
+  idleTimeoutMillis: process.env.TIMEOUT,
+  ssl: true,
+  sslmode: "no-verify"
 };
 
 var config = {
@@ -24,7 +26,7 @@ var config = {
 };
 
 const getConnection = () => {
-  return new Client(config_prod);
+  return new Client(config);
   
   // ({
   //   connectionString: process.env.DATABASE_URL_PROD,  // Use connectionString with the URL
