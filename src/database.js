@@ -7,7 +7,8 @@ if (!process.env.DATABASE_URL_PROD) {
 }
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL_PROD + "?sslmode=require",
+  //connectionString: process.env.DATABASE_URL + "?sslmode=require",
+  connectionString: process.env.DATABASE_URL_PROD,
 });
 
 pool.connect((err) => {
