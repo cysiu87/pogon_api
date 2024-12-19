@@ -11,9 +11,12 @@ app.listen(API_PORT, () => {
     console.log("Server Listening on PORT:", API_PORT);
   });
 const usersRouter = require('./routes/users.router')
+const bddRouter = require('./routes/bdd.router')
+const scriptsRouter = require('./routes/scripts.router')
   
 app.use("/api/users", usersRouter)
-  
+app.use("/api/bdd", bddRouter)
+app.use("/api/scripts", scriptsRouter)
 
 //DB test!
 // app.get('/test-db', (req, res) => {
