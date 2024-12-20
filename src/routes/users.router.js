@@ -12,5 +12,6 @@ router.put("/reset/:id", usersController.resetById)
 router.put("/active/:id", usersController.activeById)
 router.delete("/id/:id", usersController.deleteById)
 router.delete("/email/:email", usersController.deleteByEmail)
+router.post("/login", usersController.login)
 
 module.exports = router

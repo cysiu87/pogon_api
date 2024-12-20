@@ -1,9 +1,11 @@
 require("dotenv").config();
 const express = require('express');
 const app = express ();
+const cors = require('cors');
 const getConnection = require('./db-config');
 
 app.use(express.json());
+app.use(cors());
 app.set('view engine', 'pug');
 const API_PORT = process.env.API_PORT || 3000;
 
