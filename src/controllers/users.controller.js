@@ -41,13 +41,13 @@ const usersController = {
             const login = req.body.login
             const email = req.body.email
             const password = req.body.password                    
-            
-            const sql3 ="CALL insert_user_if_not_exists($1, $2, $3);"
-            
+            console.log(req.body)
+            const sql3 ="CALL insert_user_if_not_exists('"+login+"', '"+email+"', '"+password+"','1');"
+            console.log(req.body)
 
-            const { rows } = await postgre.query(sql3, [login, email, password])
-            console.log(rows[0])
-            if(rows[0].pass == password)           
+            const { rows } = await postgre.query(sql3)
+           sqlRespond = rows[0]
+            if(sqlRespond.users_id > 0)           
                 res.json({msg: "OK", data: {status: "OK"}});
             else
             res.json({msg: "OK", data: "errorrr"});
