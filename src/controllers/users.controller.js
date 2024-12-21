@@ -9,6 +9,7 @@ const usersController = {
         }
     },
     getById: async(req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
         try {
             const { rows } = await postgre.query("select * from users where id = $1", [req.params.id])
 
@@ -22,6 +23,7 @@ const usersController = {
         }
     },
     getByEmail: async(req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
         try {
             const { rows } = await postgre.query("select * from users where email = $1", [req.params.email])
 
@@ -38,38 +40,52 @@ const usersController = {
         try {
             const login = req.body.login
             const email = req.body.email
-            const password = req.body.password
-            var id = 0;
-            console.log(req.body)            
-            const sql = "DO $$ BEGIN IF NOT EXISTS(SELECT 1 FROM users WHERE email = $2) THEN INSERT INTO users (login, email, pass) VALUES($1, $2, $3)RETURNING *; ELSE RAISE NOTICE 'duplicate'; END IF; END $$;"
-            const sql2 = "INSERT INTO users (login, email, pass) SELECT $1, $2, $3 FROM users WHERE NOT EXISTS (SELECT 1  FROM users WHERE email = $2) RETURNING *;"
-            const sql3 ="CALL insert_user_if_not_exists($1, $2, $3, $4);"
-            
+            const password = req.body.password                    
+            console.log(req.body)
+            const sql3 ="CALL insert_user_if_not_exists('"+login+"', '"+email+"', '"+password+"','1');"
+            console.log(req.body)
 
-            const { rows } = await postgre.query(sql3, [login, email, password, id])
-
-            res.json({msg: "OK", data: rows[0]})
+            const { rows } = await postgre.query(sql3)
+           sqlRespond = rows[0]
+            if(sqlRespond.users_id > 0)           
+                res.json({msg: "OK", data: {status: "OK"}});
+            else
+            res.json({msg: "OK", data: "errorrr"});
 
         } catch (error) {
             res.json({msg: error.msg})
         }
     },
-    updatePasswordById: async(req, res) =>{
-        try {       
-            const password = req.body.password
-            const oldPassword = req.body.old_password
-            const sql = "SELECT * FROM users where id =$1;";
-            const { rows } = await postgre.query(sql, [req.params.id])
+    updatePasswordByEmail: async(req, res) =>{
+        try {                   
+            const oldPassword = req.body.cur_password
+            const password = req.body.new_password
+            const confPassword = req.body.new_conf_password
+            const email = req.body.email
+            const sql = "SELECT * FROM users where \"email\" ='"+email+"';";
+            const { rows } = await postgre.query(sql)
+            
             const user = rows[0]
             const oldPass = user.pass;
+            
             if(oldPassword == oldPass){
-                if(oldPass == password){
+                if(password !== confPassword){
+                    res.json({msg: "OK", data: "New password is not reaepeted well"})
+                
+                } else if (oldPass == password){
+
                     res.json({msg: "OK", data: "New Password need to be diferent than current one"})
-                } else {
-                    const sql2 = "UPDATE users set pass = $1 where id = $2 RETURNING *;";
+                }
+                
+                else {
+                    const sql2 = "UPDATE users set \"pass\" = '"+password+"', \"updateDate\" = CURRENT_TIMESTAMP where \"email\" = '"+email+"' RETURNING *;";
                     try {
-                        const { rows } = await postgre.query(sql2, [password, req.params.id]);                    
-                        res.json({msg: "OK", data: rows[0]});
+                        const { rows } = await postgre.query(sql2);         
+                        if(rows[0].pass == password)           
+                            res.json({msg: "OK", data: {status: "OK"}});
+                        else
+                        res.json({msg: "OK", data: "errorrr"});
+                        
                     } catch (error) {
                         res.json({msg: "OK", data: error.msg});
                     }                    
@@ -81,6 +97,7 @@ const usersController = {
         } catch (error) {
             res.json({msg: error.msg})
         }
+    
     },
     resetById: async(req, res) => {
         try {            
@@ -102,6 +119,7 @@ const usersController = {
         }
     },
     activeById: async(req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
         try {            
             const active = req.body.active
             var sql = "";
@@ -153,6 +171,26 @@ const usersController = {
         } catch (error) {
             res.json({msg: error.msg})
         }
+    },
+    login: async(req, res) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,PATCH,OPTIONS");
+        res.header("Access-Control-Allow-Headers", "X-Custom-Header")
+        //console.log(req.body)
+        try{
+            // const sql = "SELECT * FROM users where \"email\" = 1$ and \"pass\" = $2;";
+            const sql = "select 'OK' as \"status\", \"login\" as \"login\" from users where email = '"+req.body.email+"' and pass = '"+req.body.password+"'"
+            const { rows } = await postgre.query(sql)
+
+            if (rows[0].status == "OK") {
+                return res.json({msg: "OK", data: rows[0]})
+            } 
+
+            return res.status(404).json({msg: "not found"})
+        } catch (error){
+            res.json({msg: error.msg})
+        }
+        
     }
 }
 

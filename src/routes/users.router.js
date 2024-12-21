@@ -7,10 +7,11 @@ router.get("/", usersController.getAll)
 router.get("/id/:id", usersController.getById)
 router.get("/email/:email", usersController.getByEmail)
 router.post("/", usersController.create)
-router.put("/password/:id", usersController.updatePasswordById)
+router.post("/password", usersController.updatePasswordByEmail)
 router.put("/reset/:id", usersController.resetById)
 router.put("/active/:id", usersController.activeById)
 router.delete("/id/:id", usersController.deleteById)
 router.delete("/email/:email", usersController.deleteByEmail)
+router.post("/login", usersController.login)
 
 module.exports = router
