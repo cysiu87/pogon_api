@@ -41,9 +41,9 @@ const usersController = {
             const login = req.body.login
             const email = req.body.email
             const password = req.body.password                    
-            console.log(req.body)
+           
             const sql3 ="CALL insert_user_if_not_exists('"+login+"', '"+email+"', '"+password+"','1');"
-            console.log(req.body)
+          
 
             const { rows } = await postgre.query(sql3)
            sqlRespond = rows[0]
