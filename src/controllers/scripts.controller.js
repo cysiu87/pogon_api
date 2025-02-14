@@ -8,17 +8,31 @@ const scriptsController = {
             res.json({msg: error.msg})
         }
     },
-    getAllCat: async(req, res) => {
+    getAllCat: async(req, res) => {       
         try {
-            const { rows } = await postgre.query("select * from scriptsCat")
-            res.json({msg: "OK", data: rows})
+            const { rows } = await postgre.query("select * from \"scriptsCat\"")
+            res.json({msg: "OK", data: rows})            
         } catch (error) {
-            res.json({msg: error.msg})
+            res.json({msg: error.msg})           
         }
     },
-    getById: async(req, res) => {
+    getByUserId: async(req, res) => {
+        
         try {
-            const { rows } = await postgre.query("select * from scripts where \"scriptId\" = $1", [req.params.id])
+            const { rows } = await postgre.query("select * from \"scripts\" where \"userId\" = '"+req.params.id+"'")            
+               
+                return res.json({msg: "OK", data: rows})            
+            
+        } catch (error) {
+            
+            res.json({msg: error.msg})
+            
+        }
+       
+    },
+    getCatByUserId: async(req, res) => {
+        try {
+            const { rows } = await postgre.query("select * from \"scriptsCat\" where \"userId\" = $1", [req.params.id])
 
             if (rows[0]) {
                 return res.json({msg: "OK", data: rows})
@@ -29,21 +43,24 @@ const scriptsController = {
             res.json({msg: error.msg})
         }
     },
+
     create: async(req, res) => {
         try {   
-            console.log(req.body.sql)       
-
             let sql = req.body.sql
             let upSql = sql.replace(/'/g, "''");
             upSql = upSql.replace(/"/g, '""');
-            const userId = req.body.userId
-            console.log(upSql)                       
-            const sql3 ="INSERT INTO \"scripts\" (\"userId\", \"script\", \"createDate\") values ('"+userId+"','"+upSql+"', CURRENT_TIMESTAMP) RETURNING *;"
+            const userId = req.body.userId           
+            const categoryId = req.body.categoryId 
+            const scriptName = req.body.scriptName 
+            console.log(scriptName)
+            const sql3 ="INSERT INTO \"scripts\" (\"userId\", \"script\",\"categoryId\",\"name\", \"createDate\") values ('"+userId+"','"+upSql+"',"+categoryId+",'"+scriptName+"', CURRENT_TIMESTAMP) RETURNING *;"
+            
             
 
             const { rows } = await postgre.query(sql3)
 
             res.json({msg: "OK", data: rows[0]})
+            
 
         } catch (error) {
             res.json({msg: error.msg})
