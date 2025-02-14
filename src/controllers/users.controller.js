@@ -179,7 +179,7 @@ const usersController = {
         //console.log(req.body)
         try{
             // const sql = "SELECT * FROM users where \"email\" = 1$ and \"pass\" = $2;";
-            const sql = "select 'OK' as \"status\", \"login\" as \"login\" from users where email = '"+req.body.email+"' and pass = '"+req.body.password+"'"
+            const sql = "select 'OK' as \"status\", \"login\" as \"login\", \"id\" as \"id\" from users where email = '"+req.body.email+"' and pass = '"+req.body.password+"'"
             const { rows } = await postgre.query(sql)
 
             if (rows[0].status == "OK") {
