@@ -16,6 +16,30 @@ const resultsController = {
             res.json({msg: error.msg})
         }
     },    
+    getGame: async(req, res) => {
+        try {
+            const { rows } = await postgre.query("select * from \"Games\"")
+            res.json({msg: "OK", data: rows})
+        } catch (error) {
+            res.json({msg: error.msg})
+        }
+    },  
+    setGame: async(req, res) => {
+        try {            
+            
+            const gameName = req.body.gameName
+            const gameDate = req.body.gameDate          
+
+            var sql = "UPDATE \"Games\" SET \"GameName\" = '"+gameName+"',\"GameDate\"  = '"+gameDate+"' WHERE \"Id\" = 1 RETURNING *;"
+            
+            const { rows } = await postgre.query(sql)
+
+            res.json({msg: "OK", data: rows[0]})
+
+        } catch (error) {
+            res.json({msg: error.msg})
+        }
+    },   
     createTeam: async(req, res) => {
         try {
             const teamName = req.body.teamName                 
