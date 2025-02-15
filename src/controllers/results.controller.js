@@ -8,6 +8,46 @@ const resultsController = {
             res.json({msg: error.msg})
         }
     },    
+    getTeams: async(req, res) => {
+        try {
+            const { rows } = await postgre.query("select * from \"Teams\"")
+            res.json({msg: "OK", data: rows})
+        } catch (error) {
+            res.json({msg: error.msg})
+        }
+    },    
+    createTeam: async(req, res) => {
+        try {
+            const teamName = req.body.teamName                 
+            
+            const sql3 ="INSERT INTO \"Teams\" (\"Name\") values ('"+teamName+"')  RETURNING *;"          
+           
+            const { rows } = await postgre.query(sql3)
+           sqlRespond = rows[0]
+           res.json({msg: "OK", data: rows[0]})
+
+        } catch (error) {
+            res.json({msg: error.msg})
+        }
+    },   
+    deleteTeamById: async(req, res) => {
+        try {
+            const id = req.body.id
+            
+            const sql = "DELETE FROM \"Teams\" where \"Id\"= "+id+" RETURNING *"
+           
+            const { rows } = await postgre.query(sql)
+
+            if (rows[0]) {
+                return res.json({msg: "OK", data: rows[0]})
+            }
+
+            return res.status(404).json({msg: "not found"})            
+
+        } catch (error) {
+            res.json({msg: error.msg})
+        }
+    },
     createResult: async(req, res) => {
         try {
             const team1 = req.body.team1
