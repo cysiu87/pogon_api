@@ -7,5 +7,8 @@ router.get("/", resultControler.getResults)
 router.post("/", resultControler.createResult)
 router.put("/", resultControler.updateById)
 router.delete("/", resultControler.deleteById)
+router.get("/teams", resultControler.getTeams)
+router.post("/teams", resultControler.createTeam)
+router.delete("/teams", resultControler.deleteTeamById)
 
 module.exports = router
