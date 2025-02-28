@@ -3,14 +3,16 @@ const router = express.Router()
 
 const resultControler = require('../controllers/results.controller')
 
-router.get("/", resultControler.getResults)
-router.post("/", resultControler.createResult)
-router.put("/", resultControler.updateById)
-router.delete("/", resultControler.deleteById)
-router.get("/teams", resultControler.getTeams)
+router.get("/result/:id", resultControler.getResults)
+router.post("/result", resultControler.createResult)
+router.put("/result", resultControler.updateById)
+router.delete("/result", resultControler.deleteById)
+router.get("/teams/:id", resultControler.getTeams)
 router.post("/teams", resultControler.createTeam)
 router.delete("/teams", resultControler.deleteTeamById)
-router.get("/game", resultControler.getGame)
+router.get("/games", resultControler.getGames)
+router.get("/game/:id", resultControler.getGame)
 router.put("/game", resultControler.setGame)
+router.post("/game", resultControler.addGame)
 
 module.exports = router
