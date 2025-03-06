@@ -77,9 +77,11 @@ const resultsController = {
             const team1 = req.body.team1
             const team2 = req.body.team2
             const result1 = req.body.result1                    
-            const result2 = req.body.result2                    
+            const result2 = req.body.result2      
+            const status = req.body.status              
             
-            const sql3 ="INSERT INTO \"Results\" (\"Team1\",\"Team2\",\"Result1\",\"Result2\") values ('"+team1+"', '"+team2+"', "+result1+","+result2+")  RETURNING *;"          
+            console.log(result1)
+            const sql3 ="INSERT INTO \"Results\" (\"Team1\",\"Team2\",\"Result1\",\"Result2\",\"Status\") values ('"+team1+"', '"+team2+"', "+result1+","+result2+", '"+status+"')  RETURNING *;"          
            
             const { rows } = await postgre.query(sql3)
            sqlRespond = rows[0]
@@ -95,9 +97,10 @@ const resultsController = {
             const team1 = req.body.team1
             const team2 = req.body.team2
             const result1 = req.body.result1                    
-            const result2 = req.body.result2             
+            const result2 = req.body.result2  
+            const status = req.body.status             
 
-            var sql = "UPDATE \"Results\" SET \"Team1\" = '"+team1+"',\"Team2\"  = '"+team2+"',\"Result1\" ="+result1+",\"Result2\"="+result2+" WHERE \"Id\" = "+id+" RETURNING *;"
+            var sql = "UPDATE \"Results\" SET \"Team1\" = '"+team1+"',\"Team2\"  = '"+team2+"',\"Result1\" ="+result1+",\"Result2\"="+result2+",\"Status\"= '"+status+"' WHERE \"Id\" = "+id+" RETURNING *;"
             
             const { rows } = await postgre.query(sql)
 
