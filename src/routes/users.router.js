@@ -3,6 +3,8 @@ const router = express.Router()
 
 const usersController = require('../controllers/users.controller')
 
+// All routes here require authentication (handled in index.js)
+// Login is handled separately as a public route
 router.get("/", usersController.getAll)
 router.get("/id/:id", usersController.getById)
 router.get("/email/:email", usersController.getByEmail)
@@ -12,6 +14,5 @@ router.put("/reset/:id", usersController.resetById)
 router.put("/active/:id", usersController.activeById)
 router.delete("/id/:id", usersController.deleteById)
 router.delete("/email/:email", usersController.deleteByEmail)
-router.post("/login", usersController.login)
 
 module.exports = router
