@@ -9,7 +9,6 @@ const usersController = {
         }
     },
     getById: async(req, res) => {
-        res.header("Access-Control-Allow-Origin", "*");
         try {
             const { rows } = await postgre.query("select * from users where id = $1", [req.params.id])
 
@@ -23,7 +22,6 @@ const usersController = {
         }
     },
     getByEmail: async(req, res) => {
-        res.header("Access-Control-Allow-Origin", "*");
         try {
             const { rows } = await postgre.query("select * from users where email = $1", [req.params.email])
 
@@ -119,7 +117,6 @@ const usersController = {
         }
     },
     activeById: async(req, res) => {
-        res.header("Access-Control-Allow-Origin", "*");
         try {            
             const active = req.body.active
             var sql = "";
@@ -173,22 +170,18 @@ const usersController = {
         }
     },
     login: async(req, res) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,PATCH,OPTIONS");
-        res.header("Access-Control-Allow-Headers", "X-Custom-Header")
-        //console.log(req.body)
         try{
-            // const sql = "SELECT * FROM users where \"email\" = 1$ and \"pass\" = $2;";
-            const sql = "select 'OK' as \"status\", \"login\" as \"login\", \"id\" as \"id\" from users where email = '"+req.body.email+"' and pass = '"+req.body.password+"'"
-            const { rows } = await postgre.query(sql)
+            const sql = "SELECT 'OK' as \"status\", \"login\", \"id\" FROM users WHERE email = $1 AND pass = $2"
+            const { rows } = await postgre.query(sql, [req.body.email, req.body.password])
 
-            if (rows[0].status == "OK") {
+            if (rows[0] && rows[0].status == "OK") {
                 return res.json({msg: "OK", data: rows[0]})
             } 
 
-            return res.status(404).json({msg: "not found"})
+            return res.status(401).json({msg: "Invalid credentials"})
         } catch (error){
-            res.json({msg: error.msg})
+            console.error('Login error:', error)
+            res.status(500).json({msg: error.message || "Login error"})
         }
         
     }
