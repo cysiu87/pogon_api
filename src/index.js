@@ -18,6 +18,7 @@ const bddRouter = require('./routes/bdd.router')
 const scriptsRouter = require('./routes/scripts.router')
 const resultRouter = require('./routes/results.router')
 const result2Router = require('./routes/results2.router')
+const tournamentsRouter = require('./routes/tournaments.router')
 
 const authenticate = (req, res, next) => {
   const user = basicAuth(req);
@@ -40,4 +41,5 @@ app.use("/api/bdd",authenticate, bddRouter)
 app.use("/api/scripts",authenticate, scriptsRouter)
 app.use("/api/result", resultRouter)
 app.use("/api/result2", result2Router)
+app.use("/api/tournaments", tournamentsRouter)
 
